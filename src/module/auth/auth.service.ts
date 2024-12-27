@@ -6,8 +6,8 @@ import * as bcrypt from 'bcryptjs';
 
 import { PrismaService } from 'src/provider/prisma/prisma.service';
 import { CreateTokenResponseType } from 'src/common/types/auth';
-import { SignInAuthDto } from './dto/signin-auth.dto';
-import { SignUpAuthDto } from './dto/signup-auth.dto';
+import { RegisterAuthDto } from './dto/register-auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +16,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(signInAuthDto: SignInAuthDto) {
+  async login(loginAuthDto: LoginAuthDto) {
     const admin = await this.prismaService.user.findUnique({
-      where: { email: signInAuthDto.email },
+      where: { email: loginAuthDto.email },
       select: { id: true, password: true, email: true, name: true },
     });
 
@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     const passwordMatch = await bcrypt.compare(
-      signInAuthDto.password,
+      loginAuthDto.password,
       admin.password,
     );
     if (!passwordMatch) {
@@ -42,22 +42,22 @@ export class AuthService {
     };
   }
 
-  async register(signUpAuthDto: SignUpAuthDto) {
+  async register(registerAuthDto: RegisterAuthDto) {
     const existingUser = await this.prismaService.user.findUnique({
-      where: { email: signUpAuthDto.email },
+      where: { email: registerAuthDto.email },
     });
 
     if (existingUser) {
       throw new ConflictException('This email is already registered.');
     }
 
-    const hashedPassword = await this.hashedPassword(signUpAuthDto.password);
+    const hashedPassword = await this.hashedPassword(registerAuthDto.password);
     const newUser = await this.prismaService.user.create({
       data: {
-        email: signUpAuthDto.email,
+        email: registerAuthDto.email,
         password: hashedPassword,
-        age: signUpAuthDto.age,
-        name: signUpAuthDto.name,
+        age: registerAuthDto.age,
+        name: registerAuthDto.name,
       },
     });
 

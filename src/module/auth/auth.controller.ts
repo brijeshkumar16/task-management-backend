@@ -3,8 +3,8 @@ import { Controller, Post, Body, Get, Request } from '@nestjs/common';
 
 import { Public } from 'src/common/decorators/public.decorator';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
-import { SignInAuthDto } from './dto/signin-auth.dto';
-import { SignUpAuthDto } from './dto/signup-auth.dto';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -15,16 +15,16 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'Successful' })
   @Public()
   @Post('/login')
-  login(@Body() signInAuthDto: SignInAuthDto) {
-    return this.authService.login(signInAuthDto);
+  login(@Body() loginAuthDto: LoginAuthDto) {
+    return this.authService.login(loginAuthDto);
   }
 
   @Public()
   @ApiOperation({ summary: 'Register User' })
   @ApiResponse({ status: 201, description: 'Successful' })
   @Post('/register')
-  SignUp(@Body() signUpAuthDto: SignUpAuthDto) {
-    return this.authService.register(signUpAuthDto);
+  SignUp(@Body() registerAuthDto: RegisterAuthDto) {
+    return this.authService.register(registerAuthDto);
   }
 
   @ApiOperation({ summary: 'Refresh Access Token' })

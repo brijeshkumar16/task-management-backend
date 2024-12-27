@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Request } from '@nestjs/common';
 
 import { Public } from 'src/common/decorators/public.decorator';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
@@ -12,7 +12,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'Login User' })
-  @ApiResponse({ status: 201, description: 'Sign in Successful' })
+  @ApiResponse({ status: 201, description: 'Successful' })
   @Public()
   @Post('/login')
   login(@Body() signInAuthDto: SignInAuthDto) {
@@ -21,7 +21,7 @@ export class AuthController {
 
   @Public()
   @ApiOperation({ summary: 'Register User' })
-  @ApiResponse({ status: 201, description: 'Sign up Successful' })
+  @ApiResponse({ status: 201, description: 'Successful' })
   @Post('/register')
   SignUp(@Body() signUpAuthDto: SignUpAuthDto) {
     return this.authService.register(signUpAuthDto);
@@ -29,9 +29,17 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Refresh Access Token' })
   @ApiBearerAuth()
-  @ApiResponse({ status: 201, description: 'Token refreshed successfully' })
+  @ApiResponse({ status: 201, description: 'Successful' })
   @Post('/refresh')
   async refresh(@Body() refreshAuthDto: RefreshAuthDto) {
     return this.authService.refreshToken(refreshAuthDto.refreshToken);
+  }
+
+  @ApiOperation({ summary: 'Login user details' })
+  @ApiResponse({ status: 200, description: 'Successful' })
+  @ApiBearerAuth()
+  @Get('/me')
+  async getMe(@Request() req) {
+    return this.authService.getMe(req.user.sub);
   }
 }

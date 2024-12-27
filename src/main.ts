@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Task Management')
-    .setDescription('Build an API for managing tasks or to-dos.')
+    .setDescription('')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

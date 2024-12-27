@@ -75,6 +75,21 @@ export class AuthService {
     }
   }
 
+  async getMe(id: string) {
+    return this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        age: true,
+        email: true,
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
+  }
+
   async createToken(sub: string): Promise<CreateTokenResponseType> {
     const now = new Date();
     const access = this.createAccessToken(now, sub);

@@ -1,4 +1,4 @@
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Controller, Post, Body } from '@nestjs/common';
 
 import { Public } from 'src/common/decorators/public.decorator';
@@ -28,6 +28,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Refresh Access Token' })
+  @ApiBearerAuth()
   @ApiResponse({ status: 201, description: 'Token refreshed successfully' })
   @Post('/refresh')
   async refresh(@Body() refreshAuthDto: RefreshAuthDto) {
